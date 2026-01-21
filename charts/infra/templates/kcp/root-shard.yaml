@@ -4,6 +4,7 @@ metadata:
   name: root
   namespace: {{ .Values.kcp.namespace | default "kcp-system" }}
 spec:
+  shardBaseURL: https://root.{{ .Values.kcp.external.hostname }}:8443
   replicas: {{ .Values.kcp.rootShard.replicas }}
   {{ with .Values.kcp.image.tag }}
   proxy:
@@ -64,3 +65,34 @@ spec:
         {{ include "common.hostAliases" $ | nindent 10 }}
   extraArgs:
 {{ toYaml .Values.kcp.rootShard.extraArgs | indent 4 }}
+---
+{{- if .Values.gatewayApi.enabled }}
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TLSRoute
+metadata:
+  name: kcp-root
+  namespace: {{ .Values.kcp.namespace | default "kcp-system" }}
+spec:
+  hostnames:
+  - root.{{ .Values.kcp.external.hostname }}
+  parentRefs:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: {{ .Values.gatewayApi.name }}
+    sectionName: {{ .Values.gatewayApi.passThrough.gateway.name }}
+  rules:
+  - backendRefs:
+    - group: ""
+      kind: Service
+      name: root-kcp
+      namespace: {{ .Values.kcp.namespace | default "kcp-system" }}
+      port: 6443
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+    {{- if .Values.cors.enabled }}
+    filters:
+    {{- toYaml .Values.gatewayApi.httpRoute.corsFilters | nindent 4 }}
+    {{- end }}
+{{- end }}

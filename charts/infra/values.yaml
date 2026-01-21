@@ -6,6 +6,7 @@ hostAliases:
         - "localhost"
         - "portal.localhost"
         - "kcp.api.portal.localhost"
+        - "root.kcp.api.portal.localhost"
 
 crossplane:
   enabled: true
