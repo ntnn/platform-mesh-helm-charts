@@ -4,13 +4,18 @@ metadata:
   name: root
   namespace: {{ .Values.kcp.namespace | default "kcp-system" }}
 spec:
-  shardBaseURL: https://root.{{ .Values.kcp.external.hostname }}:8443
+  shardBaseURL: https://root.{{ .Values.kcp.external.hostname }}:{{ .Values.kcp.external.port }}
   replicas: {{ .Values.kcp.rootShard.replicas }}
-  {{ with .Values.kcp.image.tag }}
   proxy:
+  {{ with .Values.kcp.image.tag }}
     image:
       tag: {{ . }}
   {{- end }}
+    deploymentTemplate:
+      spec:
+        template:
+          spec:
+          {{ include "common.hostAliases" $ | nindent 12 }}
   {{- if .Values.kcp.oidc.enabled }}
   auth:
     {{ with .Values.kcp.oidc }}
@@ -63,6 +68,13 @@ spec:
             traffic.sidecar.istio.io/excludeOutboundPorts: "{{ .Values.kcp.webhook.port }}"
         spec:
         {{ include "common.hostAliases" $ | nindent 10 }}
+  certificateTemplates:
+    server:
+      spec:
+        dnsNames:
+          - {{ .Values.kcp.external.hostname }}
+          - root.{{ .Values.kcp.external.hostname }}
+          - root-kcp.{{ .Values.kcp.namespace | default "kcp-system" }}.svc.cluster.local
   extraArgs:
 {{ toYaml .Values.kcp.rootShard.extraArgs | indent 4 }}
 ---

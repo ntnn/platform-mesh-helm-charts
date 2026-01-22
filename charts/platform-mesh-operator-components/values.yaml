@@ -127,6 +127,8 @@ services:
       certManager:
         enabled: true
         createCA: true
+      hostAliases:
+        enabled: true
   infra:
     enabled: true
     # -- Allow the configuration of additional ocm resources
@@ -149,9 +151,18 @@ services:
       kcp:
         image:
           tag: v0.29.0
+        frontProxy:
+          extraArgs:
+            - --feature-gates=WorkspaceAuthentication=true
+            - -v=5
         rootShard:
           extraArgs:
             - --feature-gates=WorkspaceAuthentication=true
+            - --shard-base-url=https://root.kcp.api.portal.localhost:8443
+            - --shard-external-url=https://root.kcp.api.portal.localhost:8443
+            - --shard-virtual-workspace-url=https://root.kcp.api.portal.localhost:8443
+            - --external-hostname=kcp.api.portal.localhost:8443
+            - -v=5
         webhook:
           enabled: true
       istio:

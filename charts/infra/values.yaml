@@ -95,6 +95,11 @@ kcp:
     replicas: 1
     extraArgs:
     - --feature-gates=WorkspaceAuthentication=true
+    - --shard-base-url=https://root.kcp.api.portal.localhost:8443
+    - --shard-external-url=https://root.kcp.api.portal.localhost:8443
+    - --shard-virtual-workspace-url=https://root.kcp.api.portal.localhost:8443
+    - --external-hostname=kcp.api.portal.localhost:8443
+
   frontProxy:
     replicas: 1
     name: frontproxy
@@ -112,6 +117,7 @@ kcp:
         proxy_client_key: /etc/kcp-front-proxy/requestheader-client/tls.key
     extraArgs:
     - --feature-gates=WorkspaceAuthentication=true
+    - -v=5
 
 openfga:
   rbac:

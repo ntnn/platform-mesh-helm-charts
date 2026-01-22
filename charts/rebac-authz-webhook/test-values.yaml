@@ -1,4 +1,5 @@
+hostAliases:
+  enabled: true
 openfga:
   url: https://example.com
   storeName: test
-

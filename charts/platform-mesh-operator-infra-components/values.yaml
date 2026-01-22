@@ -45,8 +45,19 @@ traefik:
       websecure:
         nodePort: 31000
         exposedPort: 8443
+      traefik:
+        port: 8080
+        exposedPort: 8080
     gateway:
       enabled: false
+    api:
+      insecure: true
+      dashboard: true
+    ingressRoute:
+      dashboard:
+        enabled: true
+        matchRule: PathPrefix("/dashboard") || PathPrefix("/api")
+        entryPoints: ["web", "traefik"]
 
 traefikCRDs:
   enabled: true

@@ -18,6 +18,10 @@ spec:
    - name: feature-disable-email-verification
    - name: feature-accounts-in-accounts
   values:
+    common:
+      default:
+        hostAliases:
+          enabled: true
     account-operator:
       values:
         log:
