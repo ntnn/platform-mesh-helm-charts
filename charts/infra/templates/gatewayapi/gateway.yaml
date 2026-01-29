@@ -65,12 +65,19 @@ spec:
     {{- end }}
   {{- end }}
   {{- if .Values.gatewayApi.passThrough.gateway.enabled }}
-  - name: {{ .Values.gatewayApi.passThrough.gateway.name }}
-    port: {{ .Values.gatewayApi.passThrough.gateway.port }}
-    protocol: {{ .Values.gatewayApi.passThrough.gateway.protocol }}
-    {{- with .Values.gatewayApi.passThrough.gateway.hostname }}
-    hostname: {{ . | quote }}
-    {{- end }}
+    {{- $passThroughHostnames := .Values.gatewayApi.passThrough.gateway.hostnames | default list }}
+    {{- if $passThroughHostnames }}
+      {{- range $index, $hostname := $passThroughHostnames }}
+        {{- $listenerName := "" }}
+        {{- if eq $index 0 }}
+          {{- $listenerName = $.Values.gatewayApi.passThrough.gateway.name }}
+        {{- else }}
+          {{- $listenerName = printf "%s-%s" $.Values.gatewayApi.passThrough.gateway.name ($hostname | replace "." "-" | replace "*" "wildcard") }}
+        {{- end }}
+  - name: {{ $listenerName }}
+    port: {{ $.Values.gatewayApi.passThrough.gateway.port }}
+    protocol: {{ $.Values.gatewayApi.passThrough.gateway.protocol }}
+    hostname: {{ $hostname | quote }}
     allowedRoutes:
       namespaces:
         from: All
@@ -79,6 +86,8 @@ spec:
           kind: TLSRoute
     tls:
       mode: Passthrough
+      {{- end }}
+    {{- end }}
   {{- end }}
 {{- with .Values.gatewayApi.main.gateway.infrastructure }}
   infrastructure:

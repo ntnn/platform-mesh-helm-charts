@@ -15,7 +15,8 @@ A Helm chart for Kubernetes
 | gatewayApi.main.gateway.tls.credentialNamespace | string | `"platform-mesh-system"` | Set secret namespace if different from the gateway namespace |
 | gatewayApi.name | string | `"k8sapi-gateway"` | Name of the Gateway resource |
 | gatewayApi.passThrough.gateway.enabled | bool | `true` | Toggle to enable/disable the passthrough gateway |
-| gatewayApi.passThrough.gateway.hostname | string | `"localhost"` |  |
+| gatewayApi.passThrough.gateway.hostnames[0] | string | `"localhost"` |  |
+| gatewayApi.passThrough.gateway.hostnames[1] | string | `"*.localhost"` |  |
 | gatewayApi.passThrough.gateway.name | string | `"https-passthrough"` |  |
 | gatewayApi.passThrough.gateway.port | int | `8443` |  |
 | gatewayApi.passThrough.gateway.protocol | string | `"TLS"` |  |
