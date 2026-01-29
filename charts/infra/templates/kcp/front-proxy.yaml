@@ -40,14 +40,15 @@ spec:
   {{- with .Values.kcp.frontProxy.clusterIP }}
       clusterIP: {{ . }}
   {{- end }}
-  {{- with .Values.kcp.frontProxy.port }}
-      ports:
-      - appProtocol: https
-        name: https
-        port: {{ . }}
-        protocol: TCP
-        targetPort: 6443
-  {{- end }}
+  certificateTemplate:
+    server:
+      spec:
+        dnsNames:
+          - {{ .Values.kcp.frontProxy.name }}-front-proxy
+          - {{ .Values.kcp.frontProxy.name }}-front-proxy.{{ .Values.kcp.namespace | default "kcp-system" }}
+          - {{ .Values.kcp.frontProxy.name }}-front-proxy.{{ .Values.kcp.namespace | default "kcp-system" }}.svc.cluster.local
+          - {{ .Values.kcp.external.hostname }}
+{{ toYaml .Values.kcp.frontProxy.dnsNames | indent 10 }}
   {{- if .Values.hostAliases.enabled }}
   {{- with .Values.hostAliases.entries }}
   deploymentTemplate:

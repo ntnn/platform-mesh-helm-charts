@@ -5,6 +5,7 @@ hostAliases:
       hostnames:
         - "localhost"
         - "portal.localhost"
+        - "kcp.api.portal.localhost"
 
 externalSecrets:
   enabled: false
@@ -89,8 +90,10 @@ kcp:
   frontProxy:
     replicas: 1
     name: frontproxy
+    # dnsNames in addition to kcp.external.hostname
+    dnsNames:
+      - kcp.api.portal.localhost
     clusterIP: ""
-    port: 8443
     additionalPathMappings:
       - path: /services/contentconfigurations
         backend: https://virtual-workspaces.platform-mesh-system:8443
@@ -216,7 +219,9 @@ gatewayApi:
     gateway:
       # -- Toggle to enable/disable the passthrough gateway
       enabled: true
-      hostname: localhost
+      hostnames:
+        - "localhost"
+        - "*.localhost"
       port: 8443
       name: https-passthrough
       protocol: TLS

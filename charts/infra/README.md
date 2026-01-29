@@ -23,6 +23,7 @@ A Helm chart for Kubernetes
 | hostAliases.enabled | bool | `false` |  |
 | hostAliases.entries[0].hostnames[0] | string | `"localhost"` |  |
 | hostAliases.entries[0].hostnames[1] | string | `"portal.localhost"` |  |
+| hostAliases.entries[0].hostnames[2] | string | `"kcp.api.portal.localhost"` |  |
 | hostAliases.entries[0].ip | string | `"10.96.188.4"` |  |
 | kcp.auth.adminCert.enabled | bool | `true` |  |
 | kcp.auth.adminCert.privateKey.algorithm | string | `"RSA"` |  |
@@ -68,9 +69,9 @@ A Helm chart for Kubernetes
 | kcp.frontProxy.additionalPathMappings[1].proxy_client_cert | string | `"/etc/kcp-front-proxy/requestheader-client/tls.crt"` |  |
 | kcp.frontProxy.additionalPathMappings[1].proxy_client_key | string | `"/etc/kcp-front-proxy/requestheader-client/tls.key"` |  |
 | kcp.frontProxy.clusterIP | string | `""` |  |
+| kcp.frontProxy.dnsNames[0] | string | `"kcp.api.portal.localhost"` |  |
 | kcp.frontProxy.extraArgs[0] | string | `"--feature-gates=WorkspaceAuthentication=true"` |  |
 | kcp.frontProxy.name | string | `"frontproxy"` |  |
-| kcp.frontProxy.port | int | `8443` |  |
 | kcp.frontProxy.replicas | int | `1` |  |
 | kcp.image.tag | string | `""` |  |
 | kcp.namespace | string | `"platform-mesh-system"` |  |
